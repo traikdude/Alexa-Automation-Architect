@@ -1,19 +1,22 @@
 import { useState } from 'react';
 import { optimizeVoiceTrigger } from '../services/ai';
-import { Loader2, Mic, AlertTriangle } from 'lucide-react';
+import { Loader2, Mic, AlertTriangle, ArrowUpDown } from 'lucide-react';
 import { motion } from 'motion/react';
 
 export default function VoiceOptimizer() {
   const [phrase, setPhrase] = useState('');
   const [loading, setLoading] = useState(false);
   const [variations, setVariations] = useState<any[]>([]);
+  const [sortBy, setSortBy] = useState<'default' | 'alphabetical' | 'type'>('default');
 
   const handleOptimize = async () => {
     if (!phrase.trim()) return;
     setLoading(true);
     try {
       const results = await optimizeVoiceTrigger(phrase);
-      setVariations(results);
+      const rankedResults = results.map((r: any, idx: number) => ({ ...r, originalRank: idx + 1 }));
+      setVariations(rankedResults);
+      setSortBy('default');
     } catch (error) {
       console.error(error);
       alert('Failed to optimize trigger. Check console for details.');
@@ -21,6 +24,16 @@ export default function VoiceOptimizer() {
       setLoading(false);
     }
   };
+
+  const sortedVariations = [...variations].sort((a, b) => {
+    if (sortBy === 'alphabetical') {
+      return a.variation.localeCompare(b.variation);
+    }
+    if (sortBy === 'type') {
+      return a.type.localeCompare(b.type);
+    }
+    return a.originalRank - b.originalRank;
+  });
 
   return (
     <div className="space-y-6">
@@ -61,16 +74,36 @@ export default function VoiceOptimizer() {
           animate={{ opacity: 1, y: 0 }}
           className="space-y-4"
         >
-          <div className="flex items-center gap-3 text-amber-400 bg-amber-400/10 border border-amber-400/20 px-4 py-3 rounded-lg">
-            <AlertTriangle size={20} className="shrink-0" />
-            <span className="text-sm font-medium">Test these variations from top to bottom. The higher they are, the more likely Alexa is to understand them.</span>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3 text-amber-400 bg-amber-400/10 border border-amber-400/20 px-4 py-3 rounded-lg flex-1">
+              <AlertTriangle size={20} className="shrink-0" />
+              <span className="text-sm font-medium">
+                {sortBy === 'default' 
+                  ? "Test these variations from top to bottom. The higher they are, the more likely Alexa is to understand them."
+                  : "Variations are currently sorted. Pay attention to the original rank (#) for Alexa's recognition likelihood."}
+              </span>
+            </div>
+            
+            <div className="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-lg p-1 shrink-0">
+              <ArrowUpDown size={16} className="text-slate-500 ml-2" />
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as any)}
+                className="bg-transparent text-sm text-slate-300 font-medium py-2 pl-2 pr-8 focus:outline-none appearance-none cursor-pointer"
+              >
+                <option value="default">Ranked (Default)</option>
+                <option value="alphabetical">Alphabetical</option>
+                <option value="type">Category Type</option>
+              </select>
+            </div>
           </div>
 
           <div className="grid gap-3">
-            {variations.map((v, idx) => (
-              <div key={idx} className="bg-slate-900 border border-slate-800 rounded-lg p-4 flex flex-col sm:flex-row sm:items-center gap-4 shadow-md hover:border-slate-700 transition-colors">
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-slate-800 text-slate-400 font-bold shrink-0">
-                  #{idx + 1}
+            {sortedVariations.map((v) => (
+              <div key={v.originalRank} className="bg-slate-900 border border-slate-800 rounded-lg p-4 flex flex-col sm:flex-row sm:items-center gap-4 shadow-md hover:border-slate-700 transition-colors">
+                <div className="flex flex-col items-center justify-center w-10 h-10 rounded-full bg-slate-800 text-slate-400 shrink-0">
+                  <span className="text-xs font-medium leading-none mb-0.5">Rank</span>
+                  <span className="text-sm font-bold leading-none">#{v.originalRank}</span>
                 </div>
                 <div className="flex-1">
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-1">
