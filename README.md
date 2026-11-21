@@ -1,235 +1,67 @@
-<!-- 🎙️ ALEXA AUTOMATION ARCHITECT — REPOSITORY PRESENTATION (L3 SHOWCASE) -->
+![A voice waveform leads into a folded routine blueprint showing a lamp, a wait and music beside a checklist.](assets/banner/banner.png)
 
-<div align="center">
+# 🎙️ Alexa Automation Architect
 
-<img src="docs/assets/banner.png" alt="Alexa Automation Architect banner" width="100%">
+Plan an Alexa routine before opening the Alexa app. Describe what should happen, review the proposed action order, and take the blueprint with you as plain text or JSON. If Alexa keeps mishearing the trigger, try a different phrasing in the voice workspace.
 
-# **🎙️ Alexa Automation Architect**
+## 📑 Table of contents
 
-**A professional voice interface engineering studio, smart home routine designer, and SSML voice optimizer powered by React 19, TypeScript, Vite, and Google Gemini 2.0.**
+[Workspaces](#workspaces) · [Routine flow](#flow) · [Quick start](#start) · [Architecture and stack](#stack) · [Project status](#status) · [Contributing](#contributing) · [License](#license)
 
-[![Status](https://img.shields.io/badge/status-active%20%26%20verified-success?style=flat-square)](#-core-workspaces)
-[![React](https://img.shields.io/badge/react-19.0.0-61DAFB?style=flat-square&logo=react)](package.json)
-[![TypeScript](https://img.shields.io/badge/typescript-5.8.2-3178C6?style=flat-square&logo=typescript)](tsconfig.json)
-[![Vite](https://img.shields.io/badge/bundler-Vite%206-646CFF?style=flat-square&logo=vite)](vite.config.ts)
-[![Tailwind](https://img.shields.io/badge/styles-Tailwind%20v4-38B2AC?style=flat-square&logo=tailwind-css)](package.json)
-[![AI Engine](https://img.shields.io/badge/engine-@google/genai%20v1.29-4285F4?style=flat-square&logo=google)](package.json)
-[![License: MIT](https://img.shields.io/badge/license-MIT-informational?style=flat-square)](LICENSE)
-[![Last Commit](https://img.shields.io/github/last-commit/traikdude/Alexa-Automation-Architect?style=flat-square&color=2ea44f)](https://github.com/traikdude/Alexa-Automation-Architect)
+<a id="workspaces"></a>
 
-<p align="center">
-  <a href="#-overview"><b>Overview</b></a> •
-  <a href="#-core-workspaces"><b>Workspaces</b></a> •
-  <a href="#-routine-flow--voice-engine"><b>Routine Engine</b></a> •
-  <a href="#-diagnostics--qa"><b>Diagnostics</b></a> •
-  <a href="#-architecture"><b>Architecture</b></a> •
-  <a href="#-quick-start--local-development"><b>Quick Start</b></a> •
-  <a href="#-contributing"><b>Contributing</b></a> •
-  <a href="#-license"><b>License</b></a>
-</p>
+## 🎙️ Core workspaces
 
-</div>
+| Workspace | What you can do |
+| --- | --- |
+| [Routine Blueprint Generator](src/components/RoutineBuilder.tsx) | Enter a goal and review a suggested routine name, trigger, device, ordered actions and explanation. Copy the plan or download its JSON. |
+| [Voice Trigger Variation Engine](src/components/VoiceOptimizer.tsx) | Enter a troublesome phrase. The app requests five to eight alternatives, each with a category and recognition rationale. Sort the suggestions alphabetically or by type. |
+| [Departure Checklist](src/components/Diagnostics.tsx) | Work through 15 manual checks covering account permissions, device connectivity and routine configuration. Checkmarks persist in the current browser and can be reset. |
 
----
+<a id="flow"></a>
 
-## 📑 Table of Contents
+## 🔊 From idea to routine
 
-- [✨ Overview](#-overview)
-- [🎙️ Core Workspaces](#-core-workspaces)
-  - [1. SSML Voice Optimizer & Acoustic Tuner](#1-ssml-voice-optimizer--acoustic-tuner)
-  - [2. Visual Smart Home Routine Builder](#2-visual-smart-home-routine-builder)
-  - [3. Voice Skill Diagnostics & Latency QA](#3-voice-skill-diagnostics--latency-qa)
-- [🔊 Routine Engine & SSML Flow](#-routine-engine--ssml-flow)
-- [🔬 Diagnostics & Quality Assurance](#-diagnostics--quality-assurance)
-- [🏗️ Architecture & Data Flow](#-architecture--data-flow)
-- [🛠️ Tech Stack](#-tech-stack)
-- [⚡ Quick Start & Local Development](#-quick-start--local-development)
-- [🗂️ Repository Structure](#-repository-structure)
-- [🤝 Contributing](#-contributing)
-- [📄 License](#-license)
+Try *“For movie night, dim the lights, wait a moment, then play music.”* In the blueprint, look at where playback starts. The generation prompt asks for waits between dependent device commands, volume changes before playback and terminal actions last. Review the proposed sequence, then enter it in the Alexa app and try the trigger on your device. The downloaded JSON records the proposal. [Blueprint prompt and response fields](src/services/ai.ts)
 
----
+<a id="start"></a>
 
-## ✨ Overview
+## ⚡ Quick start
 
-**Alexa Automation Architect** is an advanced voice user interface (VUI) design studio and smart home automation orchestrator.
+From the repository root, use Node.js and npm. For the two generation workspaces, supply a Gemini API key through the local `GEMINI_API_KEY` environment setting before starting Vite.
 
-Engineered with **React 19**, **Tailwind CSS v4**, **Motion**, and **Google Gemini 2.0**, the platform enables voice engineers and IoT architects to compose natural Speech Synthesis Markup Language (SSML), sequence multi-device smart home routines, and benchmark utterance response latencies before deployment to Alexa Skills Kit (ASK) or AWS Lambda.
-
----
-
-## 🎙️ Core Workspaces
-
-```mermaid
-mindmap
-  root((🎙️ Alexa Architect))
-    🔊 Voice Optimizer
-      SSML Tag Synthesis
-      Phonetic Intonation
-      Breaks & Audio Effects
-      Whisper & Empathy Modes
-    ⚡ Routine Builder
-      IoT Device Triggers
-      Sequential Action Delays
-      Audio & Music Queues
-      Voice Broadcast Chains
-    🔬 Skill Diagnostics
-      Utterance Collision Checks
-      Slot Extraction Validation
-      Fallback Intent Simulation
-      Latency Benchmarking
+```powershell
+npm install
+npm run dev -- --host 127.0.0.1
 ```
 
-### 1. SSML Voice Optimizer & Acoustic Tuner
-Fine-tune speech synthesis with expressive SSML tags (`<emphasis>`, `<prosody>`, `<amazon:emotion>`, `<break>`), phonetic pronunciation respellings, and natural pauses.
+Open the local address printed by Vite (configured port 3000). Vite embeds the configured key in browser code. Keep a key-bearing build on a trusted local machine. Public hosting would require moving the credential and Gemini calls behind a server. [Scripts](package.json) · [Vite configuration](vite.config.ts)
 
-### 2. Visual Smart Home Routine Builder
-Compose automated smart home routines linking Alexa wake phrases to lighting scenes, thermostat settings, smart locks, audio announcements, and scheduled timers.
+<a id="stack"></a>
 
-### 3. Voice Skill Diagnostics & Latency QA
-Simulate voice intent classification, test edge-case slot values, identify phonetically ambiguous utterances, and review end-to-end response times.
+## 🏗️ Architecture and tech stack
 
----
+| Repository path | Responsibility |
+| --- | --- |
+| [src/main.tsx](src/main.tsx) and [src/App.tsx](src/App.tsx) | Mount the React 19 application and switch between its three workspaces. |
+| [src/components/](src/components/) | Render inputs, generation results, exports and checklist controls. |
+| [src/services/ai.ts](src/services/ai.ts) | Send text to Gemini through the Google GenAI SDK and parse the structured replies. The configured model is `gemini-3.1-pro-preview`. |
+| [src/index.css](src/index.css) and [package.json](package.json) | Tailwind CSS 4 styling, Lucide icons and Motion animations in a TypeScript and Vite 6 project. |
 
-## 🔊 Routine Engine & SSML Flow
+<a id="status"></a>
 
-```text
-┌────────────────────────────────────────────────────────────────────────┐
-│                     ALEXA ROUTINE & SSML PIPELINE                      │
-├───────────────────────┬────────────────────────┬───────────────────────┤
-│ 🎙️ Voice Trigger      │ ⚡ Automated Sequence   │ 🏡 IoT Output         │
-│ • "Alexa, Movie Time" │ • Dim Lights to 10%    │ • Living Room Lights  │
-│ • "Alexa, Bedtime"    │ • Lock Front Door      │ • Smart Locks         │
-│ • "Alexa, Focus Work" │ • Play Lo-Fi Ambient   │ • Multi-Room Audio    │
-└───────────────────────┴────────────────────────┴───────────────────────┘
-```
+## 🔬 Project status
 
----
+The application provides design guidance. Device discovery, routine installation, SSML playback and measured recognition or latency tests are outside the current implementation. Checklist progress reflects the items you mark yourself. Generation depends on access to the configured preview model. [Workspace components](src/components/) · [Model configuration](src/services/ai.ts)
 
-## 🔬 Diagnostics & Quality Assurance
-
-| Diagnostic Check | Validation Purpose | Metric / Threshold |
-|---|---|---|
-| 🎯 **Intent Match Rate** | Verifies utterance mapping to primary intent | ≥ 98% accuracy |
-| ⚡ **VUI Response Latency** | Measures time-to-first-speech token | < 600ms target |
-| 🛡️ **Fallback Coverage** | Ensures graceful fallback when intent is unclear | 100% test coverage |
-| 🔊 **SSML Audio Conformance**| Validates XML syntax and supported audio bitrates | 48kHz, 48kbps MP3 |
-
----
-
-## 🏗️ Architecture & Data Flow
-
-```mermaid
-flowchart TD
-    subgraph CLIENT["⚛️ React 19 Client (Vite 6)"]
-        APP["App.tsx (Main Studio Interface)"]
-        VOICE["VoiceOptimizer.tsx (SSML Tuning)"]
-        ROUTINE["RoutineBuilder.tsx (IoT Workflows)"]
-        DIAG["Diagnostics.tsx (QA & Latency)"]
-        APP --> VOICE & ROUTINE & DIAG
-    end
-
-    subgraph GENAI["🤖 Google GenAI Service"]
-        SERVICE["services/geminiService.ts (@google/genai)"]
-        SYSTEM["Alexa VUI / SSML Ruleset"]
-        SERVICE --> SYSTEM
-    end
-
-    subgraph TARGET["🎙️ Amazon Alexa & AWS Lambda"]
-        ASK["Alexa Skills Kit (ASK)"]
-        LAMBDA["AWS Lambda Node.js Handler"]
-    end
-
-    VOICE & ROUTINE <-->|"Intent & SSML Generation"| SERVICE
-    ROUTINE & DIAG -.->|"Exported JSON Schema"| ASK & LAMBDA
-```
-
----
-
-## 🛠️ Tech Stack
-
-* **Frontend Framework**: React 19 (`react` 19.0.0, `react-dom` 19.0.0)
-* **Language & Typing**: TypeScript 5.8.2 (`tsconfig.json`)
-* **Build System**: Vite 6.2.0 (`vite.config.ts`)
-* **Styling**: Tailwind CSS v4 (`@tailwindcss/vite` 4.1.14)
-* **Animations**: Motion (`motion` 12.23.24)
-* **AI Orchestration SDK**: Google GenAI SDK (`@google/genai` 1.29.0)
-* **Iconography**: Lucide React (`lucide-react` 0.546.0)
-
----
-
-## ⚡ Quick Start & Local Development
-
-### Prerequisites
-* [Node.js](https://nodejs.org/) (v18+ or v20+)
-* [Google Gemini API Key](https://aistudio.google.com/)
-
-### Setup Instructions
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/traikdude/Alexa-Automation-Architect.git
-   cd Alexa-Automation-Architect
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Set your Gemini API key in `.env`:
-   ```bash
-   GEMINI_API_KEY="your-gemini-api-key-here"
-   ```
-4. Start development server:
-   ```bash
-   npm run dev
-   ```
-5. Open `http://localhost:3000` in your browser.
-
----
-
-## 🗂️ Repository Structure
-
-```text
-Alexa-Automation-Architect/
-├── docs/                        # Presentation & visual assets
-│   └── assets/
-│       └── banner.png           # L3 Showcase high-resolution hero banner
-├── src/
-│   ├── components/
-│   │   ├── Diagnostics.tsx      # Voice skill QA & latency tests
-│   │   ├── RoutineBuilder.tsx   # Smart home routine flow constructor
-│   │   └── VoiceOptimizer.tsx   # SSML tag optimizer & acoustic editor
-│   ├── services/
-│   │   └── geminiService.ts     # Google GenAI VUI prompt synthesis
-│   ├── App.tsx                  # Studio navigation & mode coordinator
-│   ├── index.css                # Tailwind CSS styling entry
-│   └── main.tsx                 # React 19 DOM entrypoint
-├── package.json                 # Project dependencies & scripts
-├── tsconfig.json                # TypeScript compiler configuration
-├── vite.config.ts               # Vite bundler configuration
-├── README.md                    # L3 Showcase presentation documentation
-└── LICENSE                      # MIT Open Source License
-```
-
----
+<a id="contributing"></a>
 
 ## 🤝 Contributing
 
-1. Fork the repository and create your branch (`git checkout -b feature/new-ssml-preset`).
-2. Add new SSML templates in `VoiceOptimizer.tsx` or IoT triggers in `RoutineBuilder.tsx`.
-3. Verify that the build passes type checks: `npm run lint && npm run build`.
-4. Submit a Pull Request.
+For a change to the blueprint fields, update the generation schema and the component that renders the result together. Run `npm run lint` for TypeScript checks and `npm run build` for the production bundle. Use `npm run preview` to inspect that build locally. [Project scripts](package.json)
 
----
+<a id="license"></a>
 
 ## 📄 License
 
-Distributed under the **MIT License**. See [LICENSE](LICENSE) for details.
-
----
-
-<div align="center">
-
-*Engineered for Voice UI Architects, IoT Automators & Ambient AI Agents.*  
-**Alexa Automation Architect · React 19 · TypeScript · Tailwind v4 · Google GenAI**
-
-</div>
+Distributed under the [MIT License](LICENSE).
